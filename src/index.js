@@ -9,9 +9,6 @@ const cList = document.querySelector('.country-list');
 const result = document.querySelector('.country-info');
 const input = document.querySelector('#search-box');
 
-const getUrl = name =>
-  `https://restcountries.com/v2/name/${name}?fields=name,capital,population,flags,languages`;
-
 const matchedCountry = ({ name, capital, population, flags, languages }) => {
   const countryFlag = document.createElement('div');
   const langParsed = languages.map(lang => lang.name).join(', ');
