@@ -37,5 +37,11 @@ const countriesList = countries => {
 
 input.addEventListener(
   'input',
-  debounce(event => fetchCountries(event.target.value), 300)
+  debounce(
+    event =>
+      fetchCountries(event.target.value).then(countries =>
+        console.log(countries)
+      ),
+    300
+  )
 );
