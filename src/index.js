@@ -8,16 +8,28 @@ const DEBOUNCE_DELAY = 300;
 const cList = document.querySelector('.country-list');
 const result = document.querySelector('.country-info');
 const input = document.querySelector('#search-box');
+const lang = document.getElementsByClassName('country-card-lang');
+const currentCapital = document.getElementsByClassName('country-card-capital');
 
 const matchedCountry = ({ name, capital, population, flags, languages }) => {
   const countryFlag = document.createElement('div');
   const langParsed = languages.map(lang => lang.name).join(', ');
+  const langCondition = () => {
+    languages.length > 1
+      ? (lang.innerHTML = `Languages:  ${langParsed}`)
+      : (lang.innerHTML = `Language:  ${langParsed}`);
+    return lang.innerHTML;
+  };
+  const capitalCondition = () => {
+    capital === undefined
+      ? (currentCapital.textContent = `${name} does not have a capital`)
+      : (currentCapital.textContent = `Capital: ${capital}`);
+    return currentCapital.textContent;
+  };
   countryFlag.classList.add('country-card');
-  if (languages.map(language => language.name).length === 1) {
-    countryFlag.innerHTML = `<span class="country-name"><img src="${flags.svg}" alt="${name} flag" width="50px"/><h2 class="country-card-name"> ${name} </h2></span> <h3 class="country-card-capital"> Capital: ${capital}</h3> <p class="country-card-lang">Language: ${langParsed}</p><p class="country-card-pop">Population: ${population}</p>`;
-  } else {
-    countryFlag.innerHTML = `<span class="country-name"><img src="${flags.svg}" alt="${name} flag" width="50px"/><h2> ${name} </h2></span> <h3> Capital: ${capital}</h3> <p>Languages: ${langParsed}</p><p>Population: ${population}</p>`;
-  }
+  countryFlag.innerHTML = `<span class="country-name"><img src="${
+    flags.svg
+  }" alt="${name} flag" width="50px"/><h2 class="country-card-name"> ${name} </h2></span> <h3 class="country-card-capital">${capitalCondition()}</h3> <p class="country-card-lang">${langCondition()}</p><p class="country-card-pop">Population: ${population}</p>`;
   result.innerHTML = '';
   cList.innerHTML = '';
   result.append(countryFlag);
@@ -38,8 +50,13 @@ const countriesList = countries => {
 input.addEventListener(
   'input',
   debounce(event => {
+    const regex = /[\[\]!@#$%^&*()/|"'`?><0-9_+~\\;:{}]/;
+    if (event.target.value.match(regex)) {
+      return Notiflix.Notify.warning(
+        'Try using letters or dashes for searching countries. '
+      );
+    }
     fetchCountries(event.target.value).then(countries => {
-      console.log(countries);
       if (countries.length > 1 && countries.length <= 10) {
         countriesList(countries);
       }
@@ -52,37 +69,6 @@ input.addEventListener(
         );
       }
     });
+    console.clear();
   }, DEBOUNCE_DELAY)
 );
-
-// const fetchCountries = name => {
-//   const parsedName = name.trim();
-//   if (name.length === 0) return;
-//   const url = getUrl(parsedName);
-//   return fetch(getUrl(name))
-//     .then(res => {
-//       if (!res.ok) {
-//         Notiflix.Notify.failure(`Can not find a country with name of ${name}`);
-//       }
-//       return res.json();
-//     })
-//     .then(data => {
-//       return data;
-//     })
-//     .then(countries => {
-//       if (countries.length > 10) {
-//         Notiflix.Notify.warning(
-//           'Too many matches found. Please enter a more specific name.'
-//         );
-//         result = '';
-//       }
-//       if (countries.length === 1) {
-//         return matchedCountry(countries[0]);
-//       }
-//       return countriesList(countries);
-//     })
-//     .catch(error => {
-//       result.innerHTML = '';
-//       return;
-//     });
-// };
