@@ -35,30 +35,25 @@ const countriesList = countries => {
   cList.append(...listItem);
 };
 
-input.addEventListener('input', () => {
-  if (event.target.value === '') {
-    result.remove(result.innerHTML);
-  }
+input.addEventListener(
+  'input',
   debounce(event => {
-    if (event.target.value !== '') {
-      fetchCountries(event.target.value).then(countries => {
-        console.log(countries);
-        if (countries.length > 1 && countries.length <= 10) {
-          countriesList(countries);
-          console.log(event.target.value && event.target.value.length);
-        }
-        if (countries.length === 1) {
-          matchedCountry(countries[0]);
-        }
-        if (countries.length > 10) {
-          Notiflix.Notify.warning(
-            'Too many matches found. Please enter a more specific name.'
-          );
-        }
-      });
-    }
-  }, DEBOUNCE_DELAY);
-});
+    fetchCountries(event.target.value).then(countries => {
+      console.log(countries);
+      if (countries.length > 1 && countries.length <= 10) {
+        countriesList(countries);
+      }
+      if (countries.length === 1) {
+        matchedCountry(countries[0]);
+      }
+      if (countries.length > 10) {
+        Notiflix.Notify.warning(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      }
+    });
+  }, DEBOUNCE_DELAY)
+);
 
 // const fetchCountries = name => {
 //   const parsedName = name.trim();
