@@ -14,22 +14,17 @@ const currentCapital = document.getElementsByClassName('country-card-capital');
 const matchedCountry = ({ name, capital, population, flags, languages }) => {
   const countryFlag = document.createElement('div');
   const langParsed = languages.map(lang => lang.name).join(', ');
-  const langCondition = () => {
-    languages.length > 1
-      ? (lang.innerHTML = `Languages:  ${langParsed}`)
-      : (lang.innerHTML = `Language:  ${langParsed}`);
-    return lang.innerHTML;
-  };
-  const capitalCondition = () => {
-    capital === undefined
-      ? (currentCapital.textContent = `${name} does not have a capital`)
-      : (currentCapital.textContent = `Capital: ${capital}`);
-    return currentCapital.textContent;
-  };
+
   countryFlag.classList.add('country-card');
   countryFlag.innerHTML = `<span class="country-name"><img src="${
     flags.svg
-  }" alt="${name} flag" width="50px"/><h2 class="country-card-name"> ${name} </h2></span> <h3 class="country-card-capital">${capitalCondition()}</h3> <p class="country-card-lang">${langCondition()}</p><p class="country-card-pop">Population: ${population}</p>`;
+  }" alt="${name} flag" width="50px"/><h2 class="country-card-name"> ${name} </h2></span> <h3 class="country-card-capital">${
+    capital === undefined
+      ? (currentCapital.textContent = ``)
+      : (currentCapital.textContent = `Capital: ${capital}`)
+  }</h3> <p class="country-card-lang">Language${
+    languages.length === 1 ? '' : 's'
+  }: ${langParsed}</p><p class="country-card-pop">Population: ${population}</p>`;
   result.innerHTML = '';
   cList.innerHTML = '';
   result.append(countryFlag);
