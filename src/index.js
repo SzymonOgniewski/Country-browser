@@ -45,25 +45,34 @@ const countriesList = countries => {
 input.addEventListener(
   'input',
   debounce(event => {
+    result.innerHTML = '';
+    cList.innerHTML = '';
     const regex = /[\[\]!@#$%^&*()/|"'`?><0-9_+~\\;:{}]/;
     if (event.target.value.match(regex)) {
       return Notiflix.Notify.warning(
         'Try using letters or dashes for searching countries. '
       );
     }
-    fetchCountries(event.target.value).then(countries => {
-      if (countries.length > 1 && countries.length <= 10) {
-        countriesList(countries);
-      }
-      if (countries.length === 1) {
-        matchedCountry(countries[0]);
-      }
-      if (countries.length > 10) {
-        Notiflix.Notify.warning(
-          'Too many matches found. Please enter a more specific name.'
+    fetchCountries(event.target.value)
+      .then(countries => {
+        if (countries.length > 1 && countries.length <= 10) {
+          countriesList(countries);
+        }
+        if (countries.length === 1) {
+          matchedCountry(countries[0]);
+        }
+        if (countries.length > 10) {
+          Notiflix.Notify.warning(
+            'Too many matches found. Please enter a more specific name.'
+          );
+        }
+      })
+      .catch(error => {
+        if (event.target.value.length === 0) return;
+        Notiflix.Notify.failure(
+          `Cannot find a country with name of ${event.target.value}`
         );
-      }
-    });
+      });
     console.clear();
   }, DEBOUNCE_DELAY)
 );
