@@ -1,4 +1,4 @@
-# [Country browser](https://szymonogniewski.github.io/Country-browser/)
+# [Country browser](https://szymonogniewski.github.io/Country_browser/)
 
 Country browser where user can quickly check language, capital and population of searched country. Project was made using [Rest Countries v2](https://restcountries.com/) public API. 
 
